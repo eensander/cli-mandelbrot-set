@@ -34,7 +34,7 @@ std::string to_string(T value)
 
 #include "complex.cpp"
 
-#include <cmath> 
+#include <cmath>
 
 #include <iomanip>
 
@@ -71,7 +71,7 @@ void MAX_ITERATIONS()
 	MAX_ITR = ceil(abs(log(zoom)*log(zoom)*log(zoom)));
 	if (MAX_ITR <= 64)
 	    MAX_ITR = 64;
-	
+
 }
 
 int mandelbrot(complex_number cn)
@@ -80,7 +80,7 @@ int mandelbrot(complex_number cn)
 	//main_im = cn.im;
 	complex_number last_cn = cn;
 	complex_number original = cn;
-	
+
 	MAX_ITERATIONS();
 
 	for(int x = 0; x < MAX_ITR; ++x)
@@ -88,7 +88,7 @@ int mandelbrot(complex_number cn)
 		complex_number pow_cn = last_cn.sqr();
 		complex_number new_cn = pow_cn + original;
 		last_cn = new_cn;
-		
+
 		//cout << last_cn.im << " and " << last_cn.real;
 		long double radius = ((last_cn.im*last_cn.im) + (last_cn.real*last_cn.real));
 		//cout << " equals " << radius << endl;
@@ -103,20 +103,17 @@ int mandelbrot(complex_number cn)
 }
 
 
-/* LINEAR INTERPOLATION: 
- * http://stackoverflow.com/questions/345187/math-mapping-numbers
- * https://en.wikipedia.org/wiki/Linear_interpolation
+/* Range mapping:
+ * https://stackoverflow.com/a/345204
  * Y = (X-A)/(B-A) * (D-C) + C */
 int map_num(double value, double minIn, double maxIn, double minOut, double maxOut)
 {
 	return (value - minIn)/(maxIn-minIn) * (maxOut - minOut) + minOut;
-	//return ceil((value-minIn)/(maxIn-minIn)*(maxOut-minIn)+minOut);
 }
 
 unsigned int *getCharacter(int iter)
 {
-	
-	//int part_iter = (iter * 255) / MAX_ITR;
+
 	int part_iter = map_num(iter,0,MAX_ITR,30,250);
 
 	//part_iter = 255 - part_iter;
@@ -130,16 +127,16 @@ unsigned int *getCharacter(int iter)
 	unsigned int r;
 	unsigned int g;
 	unsigned int b;
-	
+
 	double red_mul = 0.9;
 	double green_mul = 0.2;
 	double blue_mul = 0.1;
-	
-	
+
+
 	if (iter == -1){
 		r = 0;
 		g = 0;
-		b = 0;	
+		b = 0;
 	}
 	else if (iter < 1000)
 	{
@@ -193,34 +190,34 @@ unsigned int *getCharacter(int iter)
 		green_mul = 0.7;
 		blue_mul = 0.6;
 	}
-	
 
-	
+
+
 	/*if (iter != -1)
 	{
 		r = part_iter * red_mul;
 		g = part_iter * green_mul;
 		b = part_iter * blue_mul;
 	}*/
-	
-	
+
+
 	if (iter != -1)
 	{
 		/*
 		int exp_iter = map_num(iter,0,MAX_ITR,1,340);
-		
+
 		r = cos(exp_iter)*150 + 50;
 		g = cos(exp_iter)*150 + 50;
 		b = cos(exp_iter)*150 + 50*/;
-		
 
-		
+
+
 		int exp_iter = map_num(iter,0,MAX_ITR,1,40);
-		
+
 		r = tan(exp_iter)*red_mul*100 + 50;
 		g = tan(exp_iter)*green_mul*100 + 50;
 		b = tan(exp_iter)*blue_mul*100 + 50;
-		
+
 		if (r > 250)
 			r = 250;
 		if (g > 250)
@@ -228,56 +225,18 @@ unsigned int *getCharacter(int iter)
 		if (b > 250)
 			b = 250;
 
-/*	
-		int exp_iter = map_num(iter,0,MAX_ITR,1,30);
-		
-		r = log2(exp_iter)*red_mul*100 + 30;
-
-		g = log2(exp_iter)*green_mul*100 + 30;
-		b = log2(exp_iter)*blue_mul*100 + 30;
-		
-		
-		if ((log2(exp_iter)*red_mul*100 + 30) > 250)
-			r = 200;
-		if ((log2(exp_iter)*green_mul*100) > 250)
-			g = 200;
-		if ((log2(exp_iter)*blue_mul*100) > 250)
-			b = 200;
-
-*/
-
-
-/*		int whl_iter = 3-map_num(iter,0,MAX_ITR,1,3);
-	
-		int WheelPos = 255 - floor(log(1/zoom) * 5 + 50);
-		if(WheelPos < 85) {
-			r = 255 - WheelPos;
-			g = 0;
-			b = WheelPos * whl_iter;
-		} else if(WheelPos < 170) {
-			WheelPos -= 85;
-			r = 0;
-			g = WheelPos * whl_iter;
-			b = 255 - WheelPos * whl_iter;
-		} else {
-			WheelPos -= 170;
-			r = WheelPos * whl_iter;
-			g = 255 - WheelPos * whl_iter;
-			b = 0;
-		}
-*/
 	}
 	rgb[0] = r;
 	rgb[1] = g;
 	rgb[2] = b;
-	
+
 	return rgb;
 	//return "\033[38;2;"+rgb+"m█\033[0m";
-	
+
 }
 
 
-void mandelbrot_to_jpg(int resolution)
+void mandelbrot_to_png(int resolution)
 {
 	long int png_width = 0;
 	long int png_height = 0;
@@ -304,13 +263,13 @@ void mandelbrot_to_jpg(int resolution)
 	{
 		return;
 	}
-	
+
 	auto const width = size_t{png_width};
 	auto const height = size_t{png_height};
 	auto pixel_data = vector<uint8_t>(3* width * height * 3);
 
 
-	
+
 	for(int y=1;y<=png_height;y++)
 	{
 		for(int x=1; x<=png_width; x++)
@@ -325,16 +284,11 @@ void mandelbrot_to_jpg(int resolution)
 				cout << "-";
 				continue;
 			}*/
-			
-			//cout << ceil(double(y)/double(png_height)*100) << "%" << endl;
-			//printf("%0.3f %%", ceil(double(y)/double(png_height)*100));
-			
+
 			/* https://stackoverflow.com/questions/14539867/how-to-display-a-progress-indicator-in-pure-c-c-cout-printf */
-			//float progress = ((
-			//double(y)/double(png_height) + double(x)/double(png_width))/99);
-			//float progress = (double)y*(double)x / (double)png_height*(double)png_width;
+
 			float progress = (double)y / (double)png_height;
-			
+
 			int barwidth = 100;
 		    cout << "[";
 			int pos = barwidth * progress;
@@ -345,25 +299,25 @@ void mandelbrot_to_jpg(int resolution)
 			}
 			cout << "] " << round(float(progress * 100.0)*100) / 100<< " %   " << y << " x " << x << " px    \r";
 			cout.flush();
-			
-			
-			
-			
-			
+
+
+
+
+
 			long double pos_real = (x-png_width/2)*(zoom/division) + offsetX;
-			
+
 			long double pos_imag = (y-png_height/2)*(zoom/division) + offsetY;
-			
-			
-			
+
+
+
 			complex_number cn = complex_number(pos_real, pos_imag);
 			int iterations = mandelbrot(cn);
 			unsigned int* int_rgb = getCharacter(iterations);
-			
+
 			int r = int_rgb[0];
 			int g = int_rgb[1];
 			int b = int_rgb[2];
-			
+
 			if (((r != 0) && (g != 0) && (b != 0)))
 			{
 				if (y != 1 && x != 1)
@@ -374,33 +328,27 @@ void mandelbrot_to_jpg(int resolution)
 				}
 				else if (x != 1)
 				{
-					
+
 					r = (pixel_data[3*(y*width+x-1)] + r*3) / 4;
 					g = (pixel_data[3*(y*width+x-1)+1] + g*3) / 4;
 					b = (pixel_data[3*(y*width+x-1)+2] + b*3) / 4;
 				}
 			}
 
-		
-		
+
+
 			pixel_data[3*(y*width+x)] = r;
 			pixel_data[3*(y*width+x)+1] = g;
 			pixel_data[3*(y*width+x)+2] = b;
 
-			
-			
+
+
 			//cout << "\n\nImaginairy position: " << pos_imag << ",\t Real part: " << pos_real << "\n\n";
 
-			
-			//complex_number cn = complex_number(pos_real,pos_imag);
-			//int iterations = mandelbrot(cn);
-			//cout << iterations << endl;
-			//cout << getCharacter(iterations);
-			
 		}
-		
+
 	}
-	
+
 	string filename = "filename";
 	auto ofs = ofstream((filename + ".ppm").c_str(), ios::binary);
 	thinks::ppm::writeRgbImage(ofs, width, height, pixel_data);
@@ -408,15 +356,15 @@ void mandelbrot_to_jpg(int resolution)
 
 	cout << "\nDone! Saved as " << filename << endl;
 	cout << "\nDone! Converting to " << filename << ".png..." << endl;
-	
-	
-	
+
+
+
 	system(("convert '" + filename + ".ppm' '" + filename + ".png'").c_str());
-	
+
 	remove((filename + ".ppm").c_str());
-	
+
 	system(("eog " + filename + ".png").c_str());
-	
+
 }
 
 
@@ -435,25 +383,25 @@ int main()
 {
     atexit(exiting);
     signal(SIGINT,exiting_c);
-   
+
     struct winsize windowsize;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &windowsize);
 
     ROWS = windowsize.ws_row - 6;
     COLS = windowsize.ws_col - 5;
-    
 
-    
+
+
     bool updated = true;
     while(true)
     {
 		if (!updated)
 		    continue;
 		cout << "\033c"; // clear window
-		
+
 		clock_t begin_time = clock();
-		
-		
+
+
 		for(int y=1;y<ROWS;y++)
 		{
 			for(int x=1; x<COLS; x++)
@@ -473,16 +421,16 @@ int main()
 					cout << "-";
 					continue;
 				}
-				
-				
-				
-				
+
+
+
+
 				long double pos_real = 0.5*(x-COLS/2)*zoom + offsetX;
-				
+
 				long double pos_imag = (y-ROWS/2)*zoom + offsetY;
-				
+
 				//cout << "\n\nImaginairy position: " << pos_imag << ",\t Real part: " << pos_real << "\n\n";
-				
+
 				complex_number cn = complex_number(pos_real,pos_imag);
 				int iterations = mandelbrot(cn);
 				//cout << iterations << endl;
@@ -493,7 +441,7 @@ int main()
 				//cout << getCharacter(iterations);
 			}
 			cout << y << endl;
-			
+
 		}
 		cout << "Zoom:\t\t\t" /* << fixed << setprecision(30)*/ <<zoom << endl;
 		cout << "Zoom:\t\t\t" /* << fixed << setprecision(30)*/ <<1/zoom << endl;
@@ -502,8 +450,8 @@ int main()
 		cout << "OffsetY:\t\t" << offsetY << endl;
 		cout << "Time taken:\t\t" << double(clock() - begin_time) / CLOCKS_PER_SEC << " s" << endl;
 		updated = false;
-		
-		
+
+
 		while(!updated)
 		{
 			//cout << getch();
@@ -555,9 +503,9 @@ int main()
 				cout << " 3) OffsetX\n";
 				cout << " 4) OffsetY\n";
 				cout << " 5) Cancel\n";
-				
+
 				char choice;
-				
+
 				cout << "\n $ ";
 				cin >> setw(1) >> choice;
 				//choice = choice[0];
@@ -610,9 +558,9 @@ int main()
 				cout << " 1) 1920 x 1080\n";
 				cout << " 2) 960 x 540\n";
 				cout << " 3) 480 x 270\n";
-				
+
 				char choice;
-				
+
 				cout << "\n $ ";
 				cin >> setw(1) >> choice;
 				//choice = choice[0];
@@ -623,9 +571,9 @@ int main()
 				    cin >> choice;
 				    //choice = choice[0];
 				}
-				
-				mandelbrot_to_jpg(choice);
-				
+
+				mandelbrot_to_png(choice);
+
 				cout << "Press 5 to refresh." << endl;
 				// save (s)
 			}
@@ -648,13 +596,11 @@ int main()
 				updated = true;
 				continue;
 			}
-				
-				
+
+
 		}
-		
-		
-		
-		
+
+
 	}
 
 

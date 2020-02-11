@@ -2,7 +2,7 @@
 
 A cli-based mandelbrot set generator.
 The adventage of rendering fractals in cli is the lower resolution, which results in quicker rendering.
-When the desired coordinates are reached, the view can be exported to a high-resolution image.
+When the desired coordinates are found, the view can be exported to a high-resolution image.
 
 
 ## Screenshots
@@ -30,7 +30,7 @@ chmod +x app
 ### Features
 
 #### Shortcuts
- - r = reset
+ - r = reset view to initial coordinates
  - i = input settings
  - s = export photo
  - 5 = reload
