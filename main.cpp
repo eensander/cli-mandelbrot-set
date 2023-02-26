@@ -3,10 +3,6 @@
 #include <signal.h>
 #include <stdlib.h>
 
-/*
-#include "BigDecimal/BigDecimal.h"
-#include "BigDecimal/BigDecimal.cpp"
-*/
 using namespace std;
 
 

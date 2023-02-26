@@ -1,4 +1,7 @@
 # cli-mandelbrot-set
+> **Note** \
+> This little project was written around 2016/2017 as part of a school project and later uploaded to GitHub (and cleaned up a little bit). \
+\
 
 A cli-based mandelbrot set generator.
 The adventage of rendering fractals in cli is the lower resolution, which results in quicker rendering.
